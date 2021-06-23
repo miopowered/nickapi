@@ -92,12 +92,12 @@ public class PacketListener extends TinyProtocol {
                 if (!message[0].contains(NickAPI.CHAT_PLACEHOLDER)) {
                     message[0] = message[0].replace(nickUser.realIdentity().username(), nickUser.fakeIdentity().username());
                 } else {
-                    String[] parts = message[0].split(NickAPI.CHAT_PLACEHOLDER);
+                    String[] parts = message[0].split("\\{nick}");
                     parts[0] = parts[0].replace(nickUser.realIdentity().username(), nickUser.fakeIdentity().username());
                     message[0] = String.join("", parts);
                 }
             }
-            
+
             message[0] = message[0].replace(NickAPI.CHAT_PLACEHOLDER, "");
 
 
