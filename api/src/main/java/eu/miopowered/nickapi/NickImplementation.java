@@ -10,6 +10,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 @Accessors(fluent = true)
@@ -44,6 +46,11 @@ public class NickImplementation implements NickAPI {
                 .ifPresent(nickUser -> {
                     this.users.remove(nickUser);
                 });
+    }
+
+    @Override
+    public Optional<NickUser> get(UUID uniqueId) {
+        return this.users.stream().filter(nickUser -> nickUser.realIdentity().uniqueId().equals(uniqueId)).findAny();
     }
 
 }

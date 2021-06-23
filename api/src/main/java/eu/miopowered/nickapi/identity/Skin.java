@@ -4,7 +4,6 @@ import eu.miopowered.nickapi.utility.SkinConverter;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.experimental.Accessors;
-import net.minecraft.server.v1_8_R3.PacketPlayOutPlayerInfo;
 import org.bukkit.entity.Player;
 
 @Accessors(fluent = true)
@@ -20,8 +19,4 @@ public class Skin {
     }
 
     private String value, signature;
-
-    public static void main(String[] args) {
-        System.out.println(PacketPlayOutPlayerInfo.class.getConstructors()[1]);
-    }
 }
