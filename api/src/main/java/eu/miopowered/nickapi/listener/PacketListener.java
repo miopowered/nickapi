@@ -81,23 +81,25 @@ public class PacketListener extends TinyProtocol {
     private void modify(Player player, Object base) {
         if (TEXT_COMPONENT_CLASS.isInstance(base)) {
             final String[] message = { TEXT_COMPONENT_TEXT_FIELD.get(base) };
-            this.implementation.users()
+            Optional<NickUser> optional = this.implementation.users()
                     .stream()
                     .filter(nickUser -> message[0].contains(nickUser.realIdentity().username()))
                     .filter(nickUser -> nickUser.filters().stream().noneMatch(filter -> filter.filter(player)))
-                    .forEach(nickUser -> {
+                    .findAny();
 
-                        if (!message[0].contains(NickAPI.CHAT_PLACEHOLDER)) {
-                            message[0] = message[0].replace(nickUser.realIdentity().username(), nickUser.fakeIdentity().username());
-                            return;
-                        }
+            if (optional.isPresent()) {
+                NickUser nickUser = optional.get();
+                if (!message[0].contains(NickAPI.CHAT_PLACEHOLDER)) {
+                    message[0] = message[0].replace(nickUser.realIdentity().username(), nickUser.fakeIdentity().username());
+                } else {
+                    String[] parts = message[0].split(NickAPI.CHAT_PLACEHOLDER);
+                    parts[0] = parts[0].replace(nickUser.realIdentity().username(), nickUser.fakeIdentity().username());
+                    message[0] = String.join("", parts);
+                }
+            }
+            
+            message[0] = message[0].replace(NickAPI.CHAT_PLACEHOLDER, "");
 
-                        String[] parts = message[0].split(NickAPI.CHAT_PLACEHOLDER);
-                        parts[0] = parts[0].replace(nickUser.realIdentity().username(), nickUser.fakeIdentity().username());
-
-                        message[0] = String.join("", parts);
-
-                    });
 
             TEXT_COMPONENT_TEXT_FIELD.set(base, message[0]);
         }
