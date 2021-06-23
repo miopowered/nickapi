@@ -36,6 +36,8 @@ public class PacketListener extends TinyProtocol {
     // Scoreboard team packet
     private static final Class<?> SCOREBOARD_TEAM_PACKET = Reflection.getClass("{nms}.PacketPlayOutScoreboardTeam");
     private static final Reflection.FieldAccessor<Collection> SCOREBOARD_TEAM_PLAYERS_FIELD = Reflection.getField(SCOREBOARD_TEAM_PACKET, "g", Collection.class);
+    private static final Reflection.FieldAccessor<String> SCOREBOARD_TEAM_PREFIX_FIELD = Reflection.getField(SCOREBOARD_TEAM_PACKET, "c", String.class);
+    private static final Reflection.FieldAccessor<String> SCOREBOARD_TEAM_SUFFIX_FIELD = Reflection.getField(SCOREBOARD_TEAM_PACKET, "d", String.class);
 
     // Chat packet
     private static final Class<?> CHAT_PACKET = Reflection.getClass("{nms}.PacketPlayOutChat");
@@ -110,7 +112,7 @@ public class PacketListener extends TinyProtocol {
 
     private void handleScoreboardTeams(Player receiver, Object packet) {
         Collection<String> collection = (Collection<String>) SCOREBOARD_TEAM_PLAYERS_FIELD.get(packet);
-        collection.stream().forEach(s -> this.implementation
+        collection.forEach(s -> this.implementation
                 .users()
                 .stream()
                 .filter(nickUser -> nickUser.realIdentity().username().equalsIgnoreCase(s))
@@ -122,6 +124,16 @@ public class PacketListener extends TinyProtocol {
                     collection.remove(s);
                     collection.add(nickUser);
                 }));
+        this.implementation
+                .users()
+                .stream()
+                .filter(nickUser -> nickUser.filters().stream().noneMatch(filter -> filter.filter(receiver)))
+                .forEach(nickUser -> {
+                    SCOREBOARD_TEAM_PREFIX_FIELD.set(packet, SCOREBOARD_TEAM_PREFIX_FIELD.get(packet)
+                            .replace(nickUser.realIdentity().username(), nickUser.fakeIdentity().username()));
+                    SCOREBOARD_TEAM_SUFFIX_FIELD.set(packet, SCOREBOARD_TEAM_SUFFIX_FIELD.get(packet)
+                            .replace(nickUser.realIdentity().username(), nickUser.fakeIdentity().username()));
+                });
         SCOREBOARD_TEAM_PLAYERS_FIELD.set(packet, collection);
     }
 
