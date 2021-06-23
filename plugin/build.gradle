@@ -1,0 +1,63 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
+plugins {
+    id 'com.github.johnrengelman.shadow' version '6.1.0'
+    id 'java'
+}
+
+sourceCompatibility = targetCompatibility = '11'
+compileJava.options.encoding = "UTF-8"
+
+group 'eu.miopowered.nickapi'
+version 1.0
+
+tasks.build.dependsOn tasks.shadowJar
+
+repositories {
+    mavenCentral()
+    maven {
+        name "spigot-repo"
+        url "https://hub.spigotmc.org/nexus/content/repositories/snapshots/"
+    }
+    maven {
+        name "bungeecord-repo"
+        url "https://oss.sonatype.org/content/repositories/snapshots"
+    }
+    maven {
+        url "https://jitpack.io"
+    }
+    maven {
+        url "https://repo.dmulloy2.net/repository/public/"
+    }
+    maven {
+        name = 'minecraft-repo'
+        url = 'https://libraries.minecraft.net/'
+    }
+}
+
+processResources {
+    from(sourceSets.main.resources.srcDirs) {
+        filter ReplaceTokens, tokens: [
+                version: rootProject.version,
+        ]
+        duplicatesStrategy = 'include'
+    }
+}
+
+dependencies {
+    compileOnly('org.projectlombok:lombok:1.18.20')
+    annotationProcessor('org.projectlombok:lombok:1.18.20')
+
+//    implementation('org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT')
+    compileOnly(files('../libs/spigot-1.8.8.jar'))
+    compileOnly('com.mojang:authlib:1.5.21');
+
+    implementation(project(':api')) {
+        transitive = false
+    }
+}
+
+shadowJar {
+//    configurations = [project.configurations.compile]
+    archiveName = "nickapi-${rootProject.version}.jar"
+}

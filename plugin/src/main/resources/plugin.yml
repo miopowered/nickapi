@@ -1,0 +1,8 @@
+main: eu.miopowered.nickapi.plugin.NickPluginImplementationTest
+name: NickAPI
+version: @version@
+author: Emmanuel Lampe <rexlManu>
+
+commands:
+  nick:
+  unnick:

@@ -1,0 +1,10 @@
+group 'eu.miopowered.nickapi'
+version '1.0'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+
+}

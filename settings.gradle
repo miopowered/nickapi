@@ -1,0 +1,4 @@
+rootProject.name = 'nickapi'
+include 'api'
+include 'plugin'
+
