@@ -1,6 +1,7 @@
 package eu.miopowered.nickapi.listener;
 
 import com.mojang.authlib.GameProfile;
+import eu.miopowered.nickapi.NickAPI;
 import eu.miopowered.nickapi.NickImplementation;
 import eu.miopowered.nickapi.identity.Identity;
 import eu.miopowered.nickapi.user.NickUser;
@@ -84,7 +85,19 @@ public class PacketListener extends TinyProtocol {
                     .stream()
                     .filter(nickUser -> message[0].contains(nickUser.realIdentity().username()))
                     .filter(nickUser -> nickUser.filters().stream().noneMatch(filter -> filter.filter(player)))
-                    .forEach(nickUser -> message[0] = (message[0].replace(nickUser.realIdentity().username(), nickUser.fakeIdentity().username())));
+                    .forEach(nickUser -> {
+
+                        if (!message[0].contains(NickAPI.CHAT_PLACEHOLDER)) {
+                            message[0] = message[0].replace(nickUser.realIdentity().username(), nickUser.fakeIdentity().username());
+                            return;
+                        }
+
+                        String[] parts = message[0].split(NickAPI.CHAT_PLACEHOLDER);
+                        parts[0] = parts[0].replace(nickUser.realIdentity().username(), nickUser.fakeIdentity().username());
+
+                        message[0] = String.join("", parts);
+
+                    });
 
             TEXT_COMPONENT_TEXT_FIELD.set(base, message[0]);
         }

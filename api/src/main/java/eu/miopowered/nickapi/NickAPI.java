@@ -10,6 +10,8 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface NickAPI {
+    String CHAT_PLACEHOLDER = "{nick}";
+
     static NickAPI create(Plugin plugin) {
         return new NickImplementation(plugin);
     }
