@@ -24,11 +24,17 @@ repositories {
     maven {
         url "https://repo.dmulloy2.net/repository/public/"
     }
+    maven {
+        name = 'minecraft-repo'
+        url = 'https://libraries.minecraft.net/'
+    }
 }
 dependencies {
     implementation('org.projectlombok:lombok:1.18.20')
     annotationProcessor('org.projectlombok:lombok:1.18.20')
 
-//    implementation('org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT')
-    implementation(files('../libs/spigot-1.8.8.jar'))
+    implementation('org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT')
+    implementation('com.mojang:authlib:1.5.21');
+
+//    implementation(files('../libs/spigot-1.8.8.jar'))
 }
