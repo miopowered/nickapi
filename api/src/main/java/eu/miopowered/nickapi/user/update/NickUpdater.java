@@ -6,7 +6,6 @@ import eu.miopowered.nickapi.identity.Identity;
 import eu.miopowered.nickapi.user.NickUser;
 import eu.miopowered.nickapi.utility.tinyprotocol.Reflection;
 import lombok.experimental.Accessors;
-import net.minecraft.server.v1_8_R3.WorldSettings;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -48,6 +47,7 @@ public class NickUpdater {
     private static final Reflection.ConstructorInvoker HEAD_ROTATION_CONSTRUCTOR = Reflection.getConstructor(HEAD_ROTATION_PACKET);
     private static final Reflection.FieldAccessor<Integer> HEAD_ROTATION_ENTITY_ID_FIELD = Reflection.getField(HEAD_ROTATION_PACKET, "a", int.class);
     private static final Reflection.FieldAccessor<Byte> HEAD_ROTATION_YAW_FIELD = Reflection.getField(HEAD_ROTATION_PACKET, "b", byte.class);
+    private static final Class<?> ENUM_GAME_MODE_CLASS = Reflection.getClass("{nms}.WorldSettings$EnumGamemode");
 
     private NickImplementation implementation;
 
@@ -78,11 +78,12 @@ public class NickUpdater {
         Object packet = PLAYER_LIST_ITEM_CONSTRUCTOR.invoke();
         PLAYER_LIST_ITEM_ACTION_FIELD.set(packet, Enum.valueOf((Class<Enum>) PLAYER_INFO_ACTION_ENUM, "REMOVE_PLAYER"));
         List list = PLAYER_LIST_ITEM_INFOS_FIELD.get(packet);
+        // SURVIVAL
         list.add(PLAYER_INFO_DATA_CONSTRUCTOR.invoke(
                 packet,
                 gameProfile,
                 1337,
-                WorldSettings.EnumGamemode.CREATIVE,
+                Enum.valueOf((Class<Enum>) ENUM_GAME_MODE_CLASS, "SURVIVAL"),
                 null
         ));
         PLAYER_LIST_ITEM_INFOS_FIELD.set(packet, list);
