@@ -7,9 +7,9 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 @Accessors(fluent = true)
 public class NickUserBuilder {
@@ -26,7 +26,7 @@ public class NickUserBuilder {
 
     NickUserBuilder(Player player) {
         this.player = player;
-        this.filters = new ArrayList<>();
+        this.filters = new CopyOnWriteArrayList<>();
         this.realIdentity = Identity.of(player);
     }
 

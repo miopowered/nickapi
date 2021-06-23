@@ -15,6 +15,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 @Accessors(fluent = true)
 public class PacketListener extends TinyProtocol {
@@ -111,7 +112,7 @@ public class PacketListener extends TinyProtocol {
     }
 
     private void handleScoreboardTeams(Player receiver, Object packet) {
-        Collection<String> collection = (Collection<String>) SCOREBOARD_TEAM_PLAYERS_FIELD.get(packet);
+        List<String> collection = new CopyOnWriteArrayList<>((Collection<String>) SCOREBOARD_TEAM_PLAYERS_FIELD.get(packet));
         collection.forEach(s -> this.implementation
                 .users()
                 .stream()
