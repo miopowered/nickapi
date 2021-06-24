@@ -44,6 +44,7 @@ public class NickImplementation implements NickAPI {
                 .filter(nickUser -> nickUser.realIdentity().uniqueId().equals(player.getUniqueId()))
                 .findAny()
                 .ifPresent(nickUser -> {
+                    this.updater.removeFromTab(nickUser.viewers(), nickUser.fakeIdentity().gameProfile());
                     this.users.remove(nickUser);
                 });
     }

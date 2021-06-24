@@ -65,7 +65,7 @@ public class NickUpdater {
         this.fixHeadRotation(nickUser.viewers(), nickUser.realIdentity().uniqueId());
     }
 
-    private void fixHeadRotation(List<Player> viewers, UUID uniqueId) {
+    public void fixHeadRotation(List<Player> viewers, UUID uniqueId) {
         Object packet = HEAD_ROTATION_CONSTRUCTOR.invoke();
         Player target = Bukkit.getPlayer(uniqueId);
         HEAD_ROTATION_ENTITY_ID_FIELD.set(packet, target.getEntityId());
@@ -74,7 +74,7 @@ public class NickUpdater {
         viewers.forEach(player -> this.implementation.packetListener().sendPacket(player, packet));
     }
 
-    private void removeFromTab(List<Player> viewers, GameProfile gameProfile) {
+    public void removeFromTab(List<Player> viewers, GameProfile gameProfile) {
         Object packet = PLAYER_LIST_ITEM_CONSTRUCTOR.invoke();
         PLAYER_LIST_ITEM_ACTION_FIELD.set(packet, Enum.valueOf((Class<Enum>) PLAYER_INFO_ACTION_ENUM, "REMOVE_PLAYER"));
         List list = PLAYER_LIST_ITEM_INFOS_FIELD.get(packet);
@@ -91,7 +91,7 @@ public class NickUpdater {
         viewers.forEach(player -> this.implementation.packetListener().sendPacket(player, packet));
     }
 
-    private void addToTab(List<Player> viewers, UUID uniqueId) {
+    public void addToTab(List<Player> viewers, UUID uniqueId) {
         Object players = Array.newInstance(ENTITY_PLAYER_CLASS, 1);
         Array.set(players, 0, CRAFT_PLAYER_GET_HANDLE_METHOD.invoke(Bukkit.getPlayer(uniqueId)));
 
@@ -99,12 +99,12 @@ public class NickUpdater {
         viewers.forEach(player -> this.implementation.packetListener().sendPacket(player, packet));
     }
 
-    private void destroyEntity(List<Player> viewers, UUID uniqueId) {
+    public void destroyEntity(List<Player> viewers, UUID uniqueId) {
         Object packet = ENTITY_DESTROY_CONSTRUCTOR.invoke(new int[]{ Bukkit.getPlayer(uniqueId).getEntityId() });
         viewers.forEach(player -> this.implementation.packetListener().sendPacket(player, packet));
     }
 
-    private void namedEntitySpawn(List<Player> viewers, UUID uniqueId) {
+    public void namedEntitySpawn(List<Player> viewers, UUID uniqueId) {
         Object packet = NAMED_ENTITY_PACKET_CONSTRUCTOR.invoke(CRAFT_PLAYER_GET_HANDLE_METHOD.invoke(Bukkit.getPlayer(uniqueId)));
         viewers.stream().filter(player -> !player.getUniqueId().equals(uniqueId)).forEach(player -> this.implementation.packetListener().sendPacket(player, packet));
     }
