@@ -24,6 +24,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * This is a proof of concept
+ */
 @Accessors(fluent = true)
 public class NickPlugin extends JavaPlugin implements Listener {
 
