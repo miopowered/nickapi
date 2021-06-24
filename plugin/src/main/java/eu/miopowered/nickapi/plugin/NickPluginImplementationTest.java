@@ -5,10 +5,13 @@ import eu.miopowered.nickapi.identity.Skin;
 import eu.miopowered.nickapi.user.NickUser;
 import lombok.experimental.Accessors;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.UUID;
@@ -26,6 +29,16 @@ public class NickPluginImplementationTest extends JavaPlugin implements Listener
         this.nickAPI = NickAPI.create(this);
 
         Bukkit.getPluginManager().registerEvents(this, this);
+    }
+
+    @EventHandler
+    public void handle(AsyncPlayerChatEvent event) {
+        Player player = event.getPlayer();
+        event.setFormat(
+                ChatColor.AQUA + player.getName() +
+                        ChatColor.DARK_GRAY + " > " + NickAPI.CHAT_PLACEHOLDER /* Important for limiting name replacement only for before message */ +
+                        ChatColor.GRAY + event.getMessage()
+        );
     }
 
     @Override
