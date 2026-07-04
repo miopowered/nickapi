@@ -12,10 +12,11 @@ dependencies {
 publishing {
     repositories {
         maven {
-            url "https://repo.it-lampe.de/releases"
-            credentials {
-                username = lite_user
-                password = lite_token
+            name "miopoweredRepoSnapshots"
+            url "https://repo.miopowered.eu/snapshots"
+            credentials(PasswordCredentials) {
+                username = project.findProperty("miopoweredRepositorySnapshotUsername") ?: System.getenv("MIOPOWERED_REPO_USERNAME")
+                password = project.findProperty("miopoweredRepositorySnapshotPassword") ?: System.getenv("MIOPOWERED_REPO_PASSWORD")
             }
             authentication {
                 basic(BasicAuthentication)

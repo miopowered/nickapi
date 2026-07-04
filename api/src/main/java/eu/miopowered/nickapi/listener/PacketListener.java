@@ -150,7 +150,7 @@ public class PacketListener extends TinyProtocol {
                     .filter(nickUser -> nickUser.realIdentity().uniqueId().equals(gameProfile.getId()))
                     .findAny();
 
-            if (optional.isEmpty()) continue;
+            if (!optional.isPresent()) continue;
             NickUser nickUser = optional.get();
             if (nickUser.filters().stream().anyMatch(filter -> filter.filter(receiver))) continue;
             PLAYER_INFO_DATA_GAME_PROFILE_FIELD.set(playerInfoData, nickUser.fakeIdentity().gameProfile());
